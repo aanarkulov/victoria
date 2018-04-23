@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Новости' %}
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="heading">
+        <div class="head uk-container">
+            <h2>{% trans 'Новости & Акции' %}</h2>
+        </div>
+    </section>
+    <section class="new_today">
+        <div class="uk-container uk-margin-medium-top uk-margin-medium-bottom">
+            <div class="uk-grid uk-grid-match uk-child-width-1-2@m uk-child-width-1-1@s uk-child-width-1-2@l"
+                 uk-grid="">
+                {% if news %}
+                    {% for item in news %}
+                        <div class="items">
+                            <div class="text uk-card uk-card-default uk-box-shadow-hover-large">
+                                <span>{{ item.pub_date }}</span><br>
+                                <div class="uk-margin-small-bottom">
+                                    <a class="{% if item.type.slug == 'novost' %}item{% else %}stock{% endif %}"
+                                       href="">{{ item.type }}</a>
+                                </div>
+                                <div class="uk-margin-medium-bottom">
+                                    <h2>{{ item.title }}</h2>
+                                </div>
+                                <a class="read" href="{% url 'news:one_news' item.slug %}">{% trans 'Читать' %}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+{#        <div class="load-more uk-margin-medium-top uk-margin-medium-bottom">#}
+{#            <div class="download uk-text-center"><a href="">{% trans 'Загрузить еще' %}</a></div>#}
+{#        </div>#}
+    </section>
+{% endblock %}

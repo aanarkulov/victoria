@@ -1,0 +1,6 @@
+<h1>{{ name }}</h1><br/>
+<h2>{{ phone }}</h2><br/>
+<h3>{{ email }}</h3><br/>
+{% if message %}
+    <p>{{ message|safe }}</p>
+{% endif %}

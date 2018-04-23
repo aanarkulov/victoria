@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load staticfiles widget_tweaks i18n %}
+{% block title %}
+    {% trans 'Каталог' %}
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="heading">
+        <div class="head uk-container">
+            <h2>{% trans 'Категории продукции' %}</h2>
+        </div>
+    </section>
+    <section class="categories">
+        <div class="uk-container">
+            <section class="selecting">
+                <form action="" method="get" name="product_filter">
+                    <div class="uk-grid uk-child-width-1-4@l uk-child-width-1-2@m uk-child-width-1-1@s"
+                         uk-grid="">
+                        <div class="choose pantalon">
+{#                                                        {{ product_filter.form.type|add_class:"select-cat demo-default" }}#}
+                            {% render_field product_filter.form.type class='select-cat demo-default' placeholder='Тип брюк' %}
+                        </div>
+                        <div class="choose size">
+                            {% render_field product_filter.form.size class='select-cat demo-default' placeholder='Размерный ряд' %}
+                        </div>
+                        <div class="choose season">
+                            {% render_field product_filter.form.season class='select-cat demo-default', placeholder='Сезон' %}
+                        </div>
+                        <div class="choose">
+                            <input class="uk-button uk-button-default  uk-width-1-1" style="margin-bottom: 3px" type="submit" value="{% trans 'Фильтровать' %}">
+                            <a class="uk-button uk-button-default filtr uk-width-1-1"
+                               href="{% url 'catalog:catalog' %}">
+                                {#                                <button class="uk-button uk-button-default filtr uk-width-1-1" type="reset" value="">#}
+                                {% trans 'Сбросить фильтры' %}
+                                {#                                </button>#}
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <section class="sorting uk-margin-top">
+                <div class="uk-grid uk-flex-middle uk-child-width-1-2@m uk-child-width-1-1@s"
+                     uk-grid="">
+                    <div class="uk-text-center line-before uk-text-left@m">
+                        <p>Всего товаров: <span class="quantity">{{ counter_products.count }}</span></p>
+                    </div>
+                    <div class="uk-text-center uk-text-right@m"><span>{% trans 'Сортировать по' %} </span>
+                        <form action="" method="get" name="product_filter">
+                            <button name="created" class="uk-button uk-button-default"
+                                    value="new">{% trans 'Новизне' %}</button>
+                            <button name="action" class="uk-button uk-button-default"
+                                    value="yes">{% trans 'Акциям' %}</button>
+                            <button name="popular" class="uk-button uk-button-default"
+                                    value="yes">{% trans 'Популярное' %}</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <section class="sort_product product uk-margin-top">
+                <div class="product_catalog uk-grid uk-grid-small uk-flex-middle uk-child-width-1-2@s uk-child-width-1-5@m"
+                     uk-grid="">
+                    {% if products %}
+                        {% for product in product_filter.qs %}
+                            <div class="product_new">
+                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"
+                                     >
+{#                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+{#                                        <div class="see_product" uk-lightbox>#}
+{#                                            <a class="uk-border-circle" href="{{ product.product_images.first.image.url }}">#}
+{#                                                <img src="{% static 'img/png/see-product.png' %}" alt="">#}
+{#                                            </a>#}
+{#                                        </div>#}
+{#                                    </div>#}
+                                <div class="uk-cover-container img-container">
+                                    <img src="{{ product.product_images.first.image.url }}" alt="" uk-cover>
+                                    <a href="{% url 'catalog:product' product.slug %}"></a>
+                                </div>
+                                </div>
+                                <div class="text uk-text-center uk-margin-top">
+                                    <a class="size uk-margin-remove" href="{% url 'catalog:product' product.slug %}">
+                                        <p style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">{{ product.name }}</p>
+                                    </a>
+                                    <h4 class="price uk-margin-remove">{{ product.amount }} {{ product.currency }}</h4>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+            <section class="about_pants uk-margin-large-top uk-margin-large-bottom">
+                <div class="about uk-text-left">
+                    <p>{{ about_our_trousers.title }}</p>
+                </div>
+                <div class="context uk-grid uk-grid-match uk-child-width-1-2@m uk-child-width-1-1@s"
+                     uk-grid="">
+                    <div class="text">
+                        <p>{{ about_our_trousers.description|safe }}</p>
+                    </div>
+                    <div class="text">
+                        <p>{{ about_our_trousers.description2|safe }}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+{% endblock %}

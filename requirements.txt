@@ -1,0 +1,11 @@
+Django==1.11
+Pillow==5.0.0
+django-ckeditor==5.4.0
+django-colorfield==0.1.14
+django-filter==1.1.0
+https://github.com/philippbosch/django-geoposition/archive/django-1.11.zip
+django-jet==1.0.7
+django-js-asset==1.0.0
+django-recaptcha2==1.0.3
+django-widget-tweaks==1.4.1
+mysqlclient==1.3.12

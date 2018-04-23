@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load staticfiles i18n widget_tweaks %}
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="about-product">
+        <div class="uk-container">
+            <div class="uk-margin-medium-top uk-margin-medium-bottom">
+                <div class="uk-grid uk-flex-middle uk-child-width-1-2@s" uk-grid="">
+                    <div class="slide_item">
+                        <div class="zooming uk-text-center uk-margin-small-bottom">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <span>Наведите курсор, чтобы увеличить</span>
+                        </div>
+                        <div class="slider-for">
+                            {% for image in product.product_images.all %}
+                                <div class="img">
+                                    <div class="uk-padding uk-height-large uk-margin-auto">
+                                        <img class="zoom-image" src="{{ image.image.url }}" alt="">
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                        <div class="slider-nav">
+                            {% for image in product.product_images.all %}
+                                <div class="img"><img data-lazy="{{ image.image.url }}" alt=""></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="product_item">
+                        <h2 class="uk-margin-small">{{ product.name }}</h2>
+                        <p class="price"><b>Цена</b>: {{ product.amount }} {{ product.currency }}</p>
+                        <div class="choose uk-grid uk-grid-collapse uk-grid-match" uk-grid="">
+                            <div class="title uk-width-1-4@s uk-width-1-4">
+                                <p class="textile uk-margin-small">Размерный ряд</p>
+                                <p class="textile uk-margin-small">Состав ткани</p>
+                                <p class="textile uk-margin-small">Цвет</p>
+                                <p class="textile uk-margin-small">Вес 1 линии</p>
+                                <p class="textile uk-margin-small">В 1-ой линейке</p>
+                            </div>
+                            <div class="choosing uk-width-expand@s uk-width-expand">
+                                <p class="consist uk-margin-small">
+                                    {% for size in product.size.all %}
+                                        {% if forloop.counter == 1 %}<b>|</b>{% endif %}   {{ size.size }}   <b>|</b>
+                                    {% endfor %}
+                                </p>
+                                <p class="consist uk-margin-small">{{ product.fabric_structure }}</p>
+                                {% for color in product.color.all %}
+                                    <div class="green">
+                                        <a href=""
+                                           style="background: {{ color.color }}; width: 20px; height: 20px; display: inline-block;"></a>
+                                    </div>
+                                {% endfor %}
+                                <p class="consist uk-margin-small">{{ product.weight_of_1_line }}</p>
+                                <p class="consist uk-margin-small">{{ product.in_the_1st_line }}</p>
+                            </div>
+                        </div>
+                        <p class="about-textile uk-margin-medium-top">{{ product.description|safe }}</p>
+                        <div class="order uk-margin-medium-top">
+                            <a class="modal uk-button uk-button-default"
+                               href="#order-product" uk-toggle="">{% trans 'Сделать заказ' %}
+                                <div class="uk-flex-top" id="order-product" uk-modal="">
+                                    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                                        <button class="uk-modal-close-outside" type="button" uk-close=""></button>
+                                        <div class="uk-grid-collapse uk-flex-middle uk-margin-remove" uk-grid="">
+                                            <div class="img uk-padding-remove uk-width-1-3@s">
+                                                <img src="{% static 'img/png/order.png' %}" alt="">
+                                            </div>
+                                            <div class="form uk-width-expand@s">
+                                                <form class="uk-grid-small"
+                                                      action="{% url 'catalog:order_of_product' %}"
+                                                      uk-grid="" method="post" id="order_form">
+                                                    {% csrf_token %}
+                                                    <h2 class="uk-margin-remove-bottom uk-width-1-1">{{ product.name }}</h2>
+                                                    <p class="price uk-margin-remove-top uk-width-1-1">
+                                                        Цена: <span>{{ product.amount }}</span> {{ product.currency }}
+                                                    </p>
+                                                    <div class="name uk-margin-small uk-width-1-2@s">
+                                                        {% render_field order_form.name class='uk-input' placeholder='Имя' %}
+                                                    </div>
+                                                    <div class="tel uk-margin-small uk-paddinr-remove uk-width-1-2@s">
+                                                        {% render_field order_form.phone class='uk-input phone' placeholder='Телефон' %}
+                                                    </div>
+                                                    <div class="mail uk-margin-small uk-width-1-1">
+                                                        {% render_field order_form.email class='uk-input' placeholder='E-mail' %}
+                                                    </div>
+                                                    <div class="mail uk-margin-small uk-width-1-1">
+                                                        {% render_field order_form.id_product class='uk-hidden' value=product.id %}
+                                                        {% render_field order_form.color class='uk-select' value=product.color %}
+                                                        {#                                                    {% render_field order_form.total_amount class='uk-hidden' %}#}
+                                                    </div>
+                                                    <div class="name uk-margin-small uk-width-1-1">
+                                                        {% render_field order_form.quantity class='uk-input' placeholder='Количество' %}
+                                                    </div>
+                                                    <div class="send uk-margin uk-width-1-1">
+                                                        <input style="width: 100%; color: #fff; font-family: Roboto-Light; font-size: 16px; padding: 3px 40px; background-color: #ca002f; border-color: #ca002f; transition: .4s; text-transform: none"
+                                                               type="submit" class="uk-button uk-button-default"
+                                                               value="{% trans 'Сделать заказ' %}">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {#                        <section class="product other_products uk-margin-medium-top uk-margin-medium-bottom">#}
+            {#                            <div class="head uk-text-center uk-margin-medium-bottom">#}
+            {#                                <h2>{% trans 'Рекомендуем' %}</h2>#}
+            {#                            </div>#}
+            {#                            <div uk-slider>#}
+            {#                                <div class="uk-position-relative uk-visible-toggle uk-light">#}
+            {#                                    <ul class="product_catalog uk-grid uk-grid-small uk-slider-items uk-child-width-1-2 uk-child-width-1-5@m">#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                        <li>#}
+            {#                                             <div class="product_new">#}
+            {#                                                <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle"#}
+            {#                                                     tabindex="0" data-src="img/png/product2.png">#}
+            {#                                                    <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+            {#                                                        <div class="see_product"><a class="uk-border-circle" href="product.html"><img#}
+            {#                                                                src="img/png/see-product.png" alt=""></a></div>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                                <div class="text uk-text-center uk-margin-top">#}
+            {#                                                    <p class="size uk-margin-remove">Vinnie Pants</p>#}
+            {#                                                    <h4 class="price uk-margin-remove">1.200 сом</h4>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </li>#}
+            {#                                    </ul>#}
+            {#                                    <a class="uk-position-center-left-out uk-position-small" href="#" uk-slidenav-previous uk-slider-item="previous"></a>#}
+            {#                                    <a class="uk-position-center-right-out uk-position-small" href="#" uk-slidenav-next uk-slider-item="next"></a>#}
+            {#                                </div>#}
+            {#                                <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>#}
+            {#                            </div>#}
+            {#                        </section>#}
+        </div>
+    </section>
+{% endblock %}
+{% block custom_scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#order_form').on('submit', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    datatype: 'JSON',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            UIkit.notification(response.message, 'primary');
+                        }
+                        else {
+                            UIkit.notification(response.message, 'danger')
+                        }
+                    }
+                })
+            })
+        });
+    </script>
+{% endblock %}

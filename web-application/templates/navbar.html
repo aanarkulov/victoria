@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="padding-120">
+<section class="breadcrumb">
+    <div class="uk-padding-small uk-container">
+        <ul class="uk-breadcrumb">
+            {% url 'catalog:catalog' as catalogss %}
+            {% url 'webapp:payment_and_delivery' as paymentss %}
+            {% url 'webapp:reviews' as reviewss %}
+            {% url 'news:news' as newss %}
+            {% url 'webapp:contacts' as contactss %}
+            <li><a href="{% url 'webapp:index' %}">{% trans 'Главная' %}</a></li>
+            <li><a href="{{ catalogss }}">{% if request.path == catalogss %}<span>{% endif %}{% trans 'Каталог' %}
+                {% if request.path == catalogss %}</span>{% endif %}</a></li>
+            <li><a href="{{ paymentss }}">{% if request.path == paymentss %}
+                <span>{% endif %}{% trans 'Оплата и доставка' %}{% if request.path == paymentss %}</span>{% endif %}</a>
+            </li>
+            <li><a href="{{ reviewss }}">{% if request.path == reviewss %}<span>{% endif %}{% trans 'Отзывы' %}
+                {% if request.path == reviewss %}</span>{% endif %}</a></li>
+            <li><a href="{{ newss }}">{% if request.path == newss %}<span>{% endif %}{% trans 'Новости' %}</span></a>
+            </li>
+            <li><a href="{{ contactss }}">{% if request.path == contactss %}<span>{% endif %}{% trans 'Контакты' %}
+                {% if request.path == contactss %}</span>{% endif %}</a></li>
+        </ul>
+    </div>
+</section>
+</div>

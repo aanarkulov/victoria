@@ -1,0 +1,119 @@
+{% load staticfiles i18n widget_tweaks %}
+<footer>
+    <div class="uk-container">
+        <div class="uk-margin-top uk-margin-bottom uk-grid uk-flex-middle" uk-grid="">
+            <div class="text line-before uk-width-expand@m">
+                <h2>{% trans 'Будь в курсе новинок' %}</h2>
+                <p>{% trans 'Каждый месяц вы будете получать выгодные предложения от нашей компании' %}</p>
+            </div>
+            <div class="form uk-text-center uk-width-auto@m ">
+                <form action="{% url 'news:subscriber' %}" method="post"
+                      class="subscribe-form no-border">{% csrf_token %}
+                    {% render_field subscriber_form.email placeholder='Введите ваш E-mail' %}
+                    <button class="uk-button uk-button-default" type="submit" value="">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="uk-margin-top foot_menu">
+        <div class="uk-container">
+            <div class="delivery uk-grid uk-flex uk-flex-middle uk-child-width-1-3@s" uk-grid="">
+                <div class="item divider">
+                    <div class="inline uk-grid uk-flex-middle uk-margin-remove">
+                        <div class="image car uk-width-1-4@s"><img src="{% static 'img/png/f_icon.png' %}" alt=""></div>
+                        <div class="text uk-width-expand@s">
+                            <h4>{% trans 'Бесплатная доставка по Кыргызстану' %}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="inline uk-grid uk-flex-middle uk-margin-remove">
+                        <div class="image uk-width-1-4@s"><img src="{% static 'img/png/f_icon2.png' %}" alt=""></div>
+                        <div class="text uk-width-expand@s">
+                            <h4>{% trans 'Постоянным клиентам ' %}<br> {% trans 'скидки' %}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="item last">
+                    <div class="inline uk-grid uk-flex-middle uk-margin-remove">
+                        <div class="image hours uk-width-1-4@s"><img src="{% static 'img/png/f_icon3.png' %}" alt="">
+                        </div>
+                        <div class="text uk-width-expand@s">
+                            <h4>{% trans 'Гарантия доставки' %}<br>{% trans 'в срок' %}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="uk-navbar-container uk-navbar-transparent icons uk-margin-top uk-visible@s" uk-navbar=""
+                 style="position: relative;">
+                <div class="uk-navbar-center">
+                    <ul class="uk-navbar-nav">
+                        <li>
+                            <a href="{{ link_to_social_networks.facebook }}" target="_blank">
+                                <i class="uk-icon-button fa fa-facebook" aria-hidden="true"></i>
+                                <span class="social">Facebook</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ link_to_social_networks.instagram }}" target="_blank">
+                                <i class="uk-icon-button fa fa-instagram" aria-hidden="true"></i>
+                                <span class="social">Instagram</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ link_to_social_networks.vk }}" target="_blank">
+                                <i class="uk-icon-button fa fa-vk" aria-hidden="true"></i>
+                                <span class="social">VKontacte</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="icons_small uk-grid uk-flex-middle uk-text-center uk-hidden@s uk-child-width-1-3" uk-grid="">
+                {% if links_to_social_networks %}
+                    {% for item in links_to_social_networks %}
+                        <div class="icon"><a href="{{ item.link }}">
+                            <i class="uk-icon-button fa fa-{{ item.slug }}" aria-hidden="true"></i>
+                            <span class="social">{{ item.title }}</span>
+                        </a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="uk-divider-small uk-margin-medium-top uk-margin-bottom uk-text-center"></div>
+            <div class="foot_sub_menu">
+                <nav class="uk-navbar-container uk-navbar-transparent uk-visible@s" uk-navbar=""
+                     style="position: relative;">
+                    <div class="uk-navbar-center">
+                        <ul class="uk-navbar-nav">
+                            <li><a href="{% url 'webapp:index' %}">{% trans 'Главная' %}</a></li>
+                            <li><a href="{% url 'catalog:catalog' %}">{% trans 'Каталог' %}</a></li>
+                            <li><a href="{% url 'webapp:payment_and_delivery' %}">{% trans 'Оплата и Доставка' %}</a>
+                            </li>
+                            <li><a href="{% url 'webapp:reviews' %}">{% trans 'Отзывы' %}</a></li>
+                            <li><a href="{% url 'news:news' %}">{% trans 'Новости' %}</a></li>
+                            <li><a href="{% url 'webapp:contacts' %}">{% trans 'Контакты' %}</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="copyright uk-text-center">
+                <p>Victoria © 2009 - {{ year.year }}</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<div id="successfully" uk-modal="">
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-outside" type="button"
+                uk-close=""></button>
+        <div class="uk-text-center"><img
+                src="{% static 'img/png/suc.png' %}" alt="">
+        </div>
+        <div class="uk-text-center">
+            <h2>{% trans 'Успешно отправлено' %}</h2>
+        </div>
+    </div>
+</div>

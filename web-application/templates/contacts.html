@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static i18n widget_tweaks %}
+{% block title %}
+    {% trans 'Контакты' %}
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="heading">
+        <div class="head uk-container">
+            <h2>Контакты</h2>
+        </div>
+    </section>
+    <section class="contact_us">
+        <div class="address">
+            <div class="uk-container">
+                <div class="uk-grid uk-grid-match uk-grid-divider uk-child-width-1-4@m uk-child-width-1-2@s"
+                     uk-grid="">
+                    {% if contact %}
+                        <div class="item1">
+                            <div>
+                                <p class="uk-margin-remove">Адрес</p><a
+                                    href="http://maps.google.com/maps?q">{{ contact.address }}</a>
+                            </div>
+                        </div>
+                        <div class="item2">
+                            <div>
+                                <p class="uk-margin-remove">Телефон</p><a
+                                    href="tel: +996(500) 310 310">{{ contact.phone }}</a>
+                            </div>
+                        </div>
+                        <div class="item3">
+                            <div>
+                                <p class="uk-margin-remove">E-mail</p><a
+                                    href="mailto: victoria@info.com">{{ contact.email }}</a>
+                            </div>
+                        </div>
+                        <div class="item4">
+                            <div>
+                                <p class="uk-margin-remove">Режим работы</p><span>{{ contact.operating_mode }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="map">
+            <div class="uk-container">
+                <div class="uk-grid uk-flex-middle" uk-grid="">
+                    <div class="google_map uk-width-3-5@m uk-width-1-1@s">
+                        <div class="map">
+
+                            <div id="googleMap" style="width:100%;height:400px;"></div>
+
+                            <script>
+                                function myMap() {
+                                    var mapProp = {
+                                        center: new google.maps.LatLng({{ coordinate.position }}),
+                                        zoom: 18,
+                                    };
+                                    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                                }
+                            </script>
+
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUl5OmV1PaWScEhBiad2BGOMkorZvQucE&callback=myMap"></script>
+
+                        </div>
+                    </div>
+                    <div class="form uk-padding-remove uk-width-expand@m uk-width-1-1@s">
+                        <form class="uk-grid-small contact-form" action="{% url 'webapp:feedback' %}" method="POST" uk-grid="" id="contact-form">
+                            <h3 class="uk-margin-remove-bottom">Написать сообщение</h3>
+                            <p class="uk-margin-remove">Любые вопросы и пожелания можете оставить прямо тут</p>
+                            {% csrf_token %}
+                            <div class="name uk-margin-small uk-width-1-2@s">
+                                {% render_field feedback_form.name class='uk-input' placeholder='Имя' %}
+                            </div>
+                            <div class="tel uk-margin-small uk-width-1-2@s">
+                                {% render_field feedback_form.phone class='uk-input phone' placeholder='Телелфон' %}
+                            </div>
+                            <div class="mail uk-margin-small uk-width-1-1">
+                                {% render_field feedback_form.email class='uk-input' placeholder='E-mail' %}
+                            </div>
+                            <div class="message uk-margin-small uk-width-1-1">
+                                {% render_field feedback_form.message class='uk-textarea' rows='5' placeholder='Сообщение' %}
+                            </div>
+                                {{ feedback_form.captcha }}
+                            <div class="send uk-margin-small uk-width-1-1">
+                                <input type="submit" class="uk-button uk-button-default" value="Отправить">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

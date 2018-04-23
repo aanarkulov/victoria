@@ -1,0 +1,174 @@
+{% load staticfiles i18n widget_tweaks recaptcha2 %}
+{% recaptcha_init 'ru' %}
+{% url 'webapp:index' as index %}
+<header class="{% if request.path == index %}main{% else %}inner{% endif %}-header"
+{#        uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar"#}
+        xmlns="http://www.w3.org/1999/html">
+    <div class="uk-container uk-container-large">
+        <div class="uk-margin-top uk-margin-bottom">
+            <nav class="uk-navbar-container uk-navbar-transparent uk-visible@m" uk-navbar=""
+                 style="position: relative">
+                <div class="uk-navbar-left">
+                    <ul class="uk-navbar-nav">
+                        <li class="logo">
+                            <a class="uk-padding" href="{{ index }}">
+                                <img src="{% static 'img/png/logo3.png' %}" alt="logo">
+                            </a>
+                        </li>
+                        {#                        <li class="language">#}
+                        {#                            <a class="english uk-active">#}
+                        {#                                <img src="{% static 'img/png/russian.png' %}" alt="english">#}
+                        {#                                <span class="lang">Russian</span>#}
+                        {#                            </a>#}
+                        {#                            <div class="change-lang" uk-dropdown="mode: click">#}
+                        {#                                <a class="lang">#}
+                        {#                                    <img src="{% static 'img/png/english.png' %}" alt="russian">#}
+                        {#                                    <span class="lang">{% trans 'English' %}</span>#}
+                        {#                                </a>#}
+                        {#                            </div>#}
+                        {#                        </li>#}
+                    </ul>
+                </div>
+                <div class="uk-navbar-center">
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-active"><a class="active"
+                                                 href="{% url 'catalog:catalog' %}">{% trans 'Каталог' %}</a>
+                        </li>
+                        <li><a href="{% url 'webapp:payment_and_delivery' %}">{% trans 'Оплата и Доставка' %}</a></li>
+                        <li><a href="{% url 'webapp:reviews' %}">{% trans 'Отзывы' %}</a></li>
+                        <li><a href="{% url 'news:news' %}">{% trans 'Новости' %}</a></li>
+                        <li><a href="{% url 'webapp:contacts' %}">{% trans 'Контакты' %}</a></li>
+                    </ul>
+                </div>
+                <div class="uk-navbar-right">
+                    <ul class="uk-navbar-nav">
+                        <li class="phone"><a href="tel: {{ contact_number }}"
+                                             uk-icon="icon:  triangle-down">{{ contact_number }}</a>
+                            <div class="uk-navbar-dropdown">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    {% if contact_numbers %}
+                                        {% for item in contact_numbers %}
+                                            {# {% if forloop.counter != 1 %}#}
+                                            <li><a href="tel: {{ item }}">{{ item }}</a></li>
+                                            <li class="uk-nav-divider"></li>
+                                            {# {% endif %}#}
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="feedback_btn">
+                            <a class="feedback" href="#modal-feedback-web" uk-toggle="">{% trans 'Обратная связь' %}
+                                <div class="uk-flex-top" id="modal-feedback-web" uk-modal="">
+                                    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                                        <button class="uk-modal-close-outside" type="button" uk-close=""></button>
+                                        <div class="uk-flex-middle uk-margin-remove" uk-grid="">
+                                            <div class="form uk-width-1-1">
+                                                <form class="uk-grid-small modal-form"
+                                                      action="{% url 'webapp:feedback' %}"
+                                                      uk-grid="" method="POST">
+                                                    <h2 class="uk-margin-remove-bottom uk-width-1-1">{% trans 'Обратная связь' %}</h2>
+                                                    <p class="back uk-margin-remove-top uk-width-1-1">
+                                                        {% trans 'Введите ваши данные и наши менеджеры свяжутся с вами в кротчайшие время.' %}
+                                                    </p>
+                                                    {% csrf_token %}
+                                                    <div class="name uk-margin-small uk-width-1-2@s">
+                                                        {% render_field feedback_form.name class='uk-input' placeholder='Имя' %}
+                                                    </div>
+                                                    <div class="tel uk-margin-small uk-width-1-2@s">
+                                                        {% render_field feedback_form.phone class='uk-input phone' placeholder='Телелфон' %}
+                                                    </div>
+                                                    <div class="mail uk-margin-small uk-width-1-1">
+                                                        {% render_field feedback_form.email class='uk-input' placeholder='E-mail' %}
+                                                    </div>
+                                                    {{ feedback_form.captcha }}
+                                                    <div class="send uk-margin uk-width-1-1">
+                                                        <input style="width: 100%; color: #fff; font-family: Roboto-Light; font-size: 16px; padding: 3px 40px; background-color: #ca002f; border-color: #ca002f; transition: .4s; text-transform: none"
+                                                               type="submit" class="uk-button uk-button-default"
+                                                               value="{% trans 'Отправить' %}">
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="mobile uk-offcanvas-content uk-hidden@m">
+                <button class="uk-button uk-button-default uk-margin-small-right" type="button"
+                        uk-toggle="target: #offcanvas-nav-primary"><i class="fa fa-2x fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="mobile-img-logo uk-display-inline-block">
+                    <a href="{{ index }}">
+                    <img src="{% static 'img/png/logo3.png' %}" alt="logo">
+                    </a>
+                </div>
+                <div id="offcanvas-nav-primary" uk-offcanvas="overlay: true">
+                    <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+                        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+                            <li class="logo"></li>
+                            <a class="uk-padding" href="{% url 'webapp:index' %}">
+                                <img src="{% static 'img/png/logo.png' %}" alt="logo">
+                            </a>
+                            {#                            <li class="language">#}
+                            {#                                <a class="english uk-active">#}
+                            {#                                    <img src="{% static 'img/png/russian.png' %}" alt="english"><span class="lang">{% trans 'Russian' %}</span>#}
+                            {#                                </a>#}
+                            {#                                <div class="change-lang" uk-dropdown="mode: click">#}
+                            {#                                    <a class="lang">#}
+                            {#                                        <img src="{% static 'img/png/english.png' %}" alt="russian">#}
+                            {#                                        <span class="lang">{% trans 'English' %}</span>#}
+                            {#                                    </a>#}
+                            {#                                </div>#}
+                            {#                            </li>#}
+                            <li><a href="{% url 'catalog:catalog' %}">{% trans 'Каталог' %}</a></li>
+                            <li><a href="{% url 'webapp:payment_and_delivery' %}">{% trans 'Оплата и Доставка' %}</a>
+                            </li>
+                            <li><a href="{% url 'webapp:reviews' %}">{% trans 'Отзывы' %}</a></li>
+                            <li><a href="{% url 'webapp:contacts' %}">{% trans 'Контакты' %}</a></li>
+                            <li class="feedback_btn">
+                                <a class="feedback" href="#modal-feedback-mob" uk-toggle="">{% trans 'Обратная связь' %}
+                                    <div class="uk-flex-top" id="modal-feedback-mob" uk-modal="">
+                                        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+                                            <button class="uk-modal-close-outside" type="button" uk-close=""></button>
+                                            <div class="uk-flex-middle uk-margin-remove" uk-grid="">
+                                                <div class="form uk-width-1-1">
+                                                    <form class="uk-grid-small modal-form"
+                                                          action="{% url 'webapp:feedback' %}"
+                                                          uk-grid="" method="POST">
+                                                        <h2 class="uk-margin-remove-bottom uk-width-1-1">{% trans 'Обратная связь' %}</h2>
+                                                        <p class="back uk-margin-remove-top uk-width-1-1">
+                                                            {% trans 'Введите ваши данные и наши менеджеры свяжутся с вами в кротчайшие время.' %}
+                                                        </p>
+                                                        <div class="name uk-margin-small uk-width-1-2@s">
+                                                            {% render_field feedback_form.name class='uk-input' placeholder='Имя' %}
+                                                        </div>
+                                                        <div class="tel uk-margin-small uk-width-1-2@s">
+                                                            {% render_field feedback_form.phone class='uk-input phone' placeholder='Телелфон' %}
+                                                        </div>
+                                                        <div class="mail uk-margin-small uk-width-1-1">
+                                                            {% render_field feedback_form.email class='uk-input' placeholder='E-mail' %}
+                                                        </div>
+                                                        {{ feedback_form.captcha }}
+                                                        <div class="send uk-margin uk-width-1-1">
+                                                            <input style="width: 100%; color: #fff; font-family: Roboto-Light; font-size: 16px; padding: 3px 40px; background-color: #ca002f; border-color: #ca002f; transition: .4s; text-transform: none"
+                                                                   type="submit" class="uk-button uk-button-default"
+                                                                   value="{% trans 'Отправить' %}">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+</header>

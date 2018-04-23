@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load staticfiles i18n %}
+{% block title %}
+    {% trans 'Главная' %}
+{% endblock %}
+{% block content %}
+    <section class="banner-header">
+        <div class="banner">
+            <div class="uk-background-cover uk-height-large uk-flex uk-flex-center uk-flex-middle"
+                 style="background: url({% if banner.image %}{{ banner.image.url }}{% endif %});">
+                <div class="uk-text-center">
+                    <h1 class="uk-margin-medium-top">{{ banner.title }}</h1><img
+                        src="{% static 'img/png/border-banner.png' %}"
+                        alt="">
+                    {{ banner.description|safe }}
+                    {#                    <a class="watch-all uk-button uk-button-default"#}
+                    {#                           href="{% url 'catalog:catalog' %}">{% trans 'Смотреть все брюки' %}</a>#}
+                    {#                    <a class="how-order uk-button uk-button-default"#}
+                    {#                        href="{% url 'webapp:payment_and_delivery' %}">{% trans 'Как заказать' %}</a>#}
+                    <div class="our_company">
+                        <div class="uk-grid uk-child-width-1-3@m uk-child-width-1-1" uk-grid="">
+                            {% if advantages %}
+                                {% for advantage in advantages %}
+                                    <div class="item divider">
+                                        <div class="inline uk-grid uk-margin-remove">
+                                            <div class="image diamond uk-width-1-4@s uk-flex uk-flex-middle">
+                                                <img class="lazy" src="{{ advantage.icon.url }}" alt="">
+                                            </div>
+                                            <div class="text uk-width-expand@s">
+                                                <h4>{{ advantage.title }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="scroll-down uk-visible@s"><a
+                            href="#scroll" uk-scroll><span>{% trans 'Листайте' %}<br>{% trans 'вниз' %}</span></a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="scroll" class="season_collection">
+        <div class="uk-grid uk-grid-match uk-child-width-1-4@m uk-child-width-1-2@s" uk-grid="">
+            {% if seasons %}
+                {% for season in seasons %}
+                    <div>
+                        <div class="season uk-box-shadow-hover-xlarge">
+                            {% if season.season == 'зима' %}
+                                <div class="text winter uk-text-center uk-card-body">
+                            {% elif season.season == 'весна' %}
+                                <div class="text spring uk-text-center uk-card-body">
+                            {% elif season.season == 'лето' %}
+                                <div class="text summer uk-text-center uk-card-body">
+                            {% elif season.season == 'осень' %}
+                                <div class="text autumn uk-text-center uk-card-body">
+                            {% endif %}
+                            <a href="/catalog/?season={{ forloop.counter }}">
+                                <p class="uk-margin-remove">{% trans 'Коллекция' %}</p>
+                                <h3 class="uk-margin-remove">{{ season.season }}</h3>
+                            </a>
+                            </div>
+                            <div class="img lazy uk-background-cover uk-height-large" tabindex="0"
+                                 data-src="{{ season.image.url }}"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+    <section class="product">
+        <div class="uk-container">
+            <div class="head uk-text-center uk-padding">
+                <h2><a href="">{% trans 'Продукция' %}</a></h2><img src="{% static 'img/png/border-main.png' %}" alt="">
+            </div>
+            <div class="product_catalog uk-grid uk-grid-small uk-grid-match uk-child-width-1-2@s uk-child-width-1-5@m"
+                 uk-grid="">
+                {% if products %}
+                    {% for product in products %}
+                        <div class="product_new">
+                            <div class="lazy uk-box-shadow-large uk-background-cover uk-height-large uk-panel uk-flex uk-flex-top uk-flex-left uk-inline-clip uk-transition-toggle">
+                                {#                                <div class="product_about uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">#}
+                                {#                                    <div class="see_product" uk-lightbox>#}
+                                {#                                        <a class="uk-border-circle" href="{{ product.product_images.first.image.url }}">#}
+                                {#                                            <img src="{% static 'img/png/see-product.png' %}" alt="">#}
+                                {#                                        </a>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <div class="uk-cover-container img-container">
+                                    <img src="{{ product.product_images.first.image.url }}" alt="" uk-cover>
+                                    <a href="{% url 'catalog:product' product.slug %}"></a>
+                                </div>
+                            </div>
+                            <div class="text uk-text-center uk-margin-top">
+                                <a class="size uk-margin-remove" href="{% url 'catalog:product' product.slug %}">
+                                    <p>{{ product.name }}</p>
+                                </a>
+                                <h4 class="price uk-margin-remove">{{ product.amount }} {{ product.currency }}</h4>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            </div>
+        </div>
+        {% if is_paginated %}
+            <section class="pagination">
+                <div class="uk-container">
+                    <ul class="uk-pagination uk-flex-center">
+                        {% if page_obj.has_previous %}
+                            <li class="uk-icon-button"><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="uk-disabled"><span>&laquo;</span></li>
+                        {% endif %}
+
+                        {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="uk-active uk-icon-button"><span>{{ i }}</span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="uk-icon-button"><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="uk-disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    </section>
+
+    <section class="reviews">
+        <div class="uk-container">
+            <div class="uk-grid uk-flex-middle uk-grid-divider uk-text-center uk-child-width-1-2@s"
+                 uk-grid="">
+                <div class="about_company">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="{% static 'img/png/logo2.png' %}" alt="">
+                        </a>
+                    </div>
+                    <div class="text uk-margin-top">
+                        <h4>{{ about.title }}</h4>
+                        <p class="more">{{ about.description|safe }}</p>
+                    </div>
+                </div>
+                <div class="reviews_inner uk-margin-large-top">
+                    <h4 class="uk-text-center">{% trans 'Отзывы наших клиентов' %}</h4>
+                    <div class="slideshow uk-margin-top"
+                         uk-slideshow="min-height: 450; animation: push">
+                        <div class="uk-position-relative uk-visible-toggle uk-light">
+                            <ul class="uk-slideshow-items">
+                                {% if reviews %}
+                                    {% for review in reviews %}
+                                        <li class="uk-active">
+                                            <div class="img_client uk-border-circle uk-cover-container uk-display-inline-block">
+                                                <canvas width="100" height="100"></canvas>
+                                                <img src="{{ review.image.url }}" alt="" uk-cover>
+                                            </div>
+                                            <div class="review_client uk-margin-top uk-text-center">
+                                                <p class="name_client">{{ review.full_name }}</p>
+                                                <p class="more">{{ review.text|safe }}</p>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                            <ul class="uk-dotnav uk-flex-center uk-margin">
+                                {% for i in reviews %}
+                                    <li uk-slideshow-item="{{ forloop.counter0 }}"><a href="#">Item</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="news-main uk-container uk-margin-large-top uk-margin-large-bottom">
+        <div class="news_block uk-grid uk-flex-middle" uk-grid="">
+            <div class="news_share uk-width-1-4@m uk-width-1-2@s">
+                <div class="uk-card">
+                    <h3>{% trans 'Новости' %} <br> {% trans '& Акции' %}</h3>
+                    <p>{% trans 'Все последние новости и акции' %}<br>{% trans 'можете читать тут' %}</p>
+                </div>
+            </div>
+            <div class="new_today uk-width-expand@m uk-width-1-2@s">
+                <div class="uk-grid uk-grid-match uk-child-width-1-3@m uk-child-width-1-1@s" uk-grid="">
+                    {% if news %}
+                        {% for item in news %}
+                            <div class="items">
+                                <div class="text uk-card uk-card-default uk-box-shadow-hover-large">
+                                    <span>{{ item.pub_date }}</span><br>
+                                    <div class="uk-margin-small-bottom">
+                                        <a class="{% if item.type.slug == 'novost' %}item{% else %}stock{% endif %}"
+                                           href="">{{ item.type }}</a>
+                                    </div>
+                                    <div class="uk-margin-small-bottom">
+                                        <h5>{{ item.title }}</h5>
+                                    </div>
+                                    <a class="read" href="{% url 'news:one_news' item.slug %}">{% trans 'Читать' %}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

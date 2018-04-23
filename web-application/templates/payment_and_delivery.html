@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Оплата и доставка' %}
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="heading">
+        <div class="head uk-container">
+            <h2>{% trans 'Оплата и доставка' %}</h2>
+        </div>
+    </section>
+    <section class="ship-and-pay">
+        <div class="uk-container">
+            <div class="uk-grid uk-grid-match uk-child-width-1-2@m uk-child-width-1-1@s" uk-grid="">
+                {% if payment_and_delivery %}
+                    {% for item in payment_and_delivery %}
+                        <div class="item">
+                            <div class="pay uk-card uk-card-default">
+                                <div class="uk-grid uk-flex-middle uk-margin-remove">
+                                    <div class="image uk-padding-remove uk-cover-container uk-position-relative uk-width-1-4@s">
+                                        {% if item.slug == 'ob-oplate' %}
+                                            <img class="pay" src="{% static 'img/png/ship.png' %}" alt="">
+                                        {% elif item.slug == 'o-dostavke' %}
+                                            <img class="pay" src="{% static 'img/png/pay.png' %}" alt="">
+                                        {% endif %}
+                                    </div>
+                                    <div class="text_head uk-width-expand@s">
+                                        <p class="inf uk-margin-remove">Информация</p>
+                                        <h4 class="uk-margin-remove">{{ item.title }}</h4>
+                                    </div>
+                                </div>
+                                <div class="text uk-margin-medium-top">
+                                    <p>{{ item.description|safe }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="cooperation uk-margin-top">
+                <div class="about_coop uk-grid uk-flex-middle uk-margin-remove">
+                    <div class="image uk-padding-remove uk-cover-container uk-position-relative uk-width-1-6@s"><img
+                            src="{% static 'img/png/ship.png' %}" alt=""></div>
+                    <div class="text_head uk-width-expand@s">
+                        <h4 class="uk-margin-remove">{{ we_cooperate.title }}</h4>
+                        <p class="inf uk-margin-remove">{{ we_cooperate.description|safe }}</p>
+                    </div>
+                </div>
+                <div class="img_coop uk-margin-large-top uk-grid uk-flex-middle uk-text-center uk-child-width-1-5@s"
+                     uk-grid="">
+                    {% if partners %}
+                        {% for partner in partners %}
+                            <div class="img"><a href="{{ partner.url }}"><img src="{{ partner.logo.url }}"></a></div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}
+    {{ new.title }}
+{% endblock %}
+{#{% block head %}#}
+{#    <meta charset="UTF-8">#}
+{#    <meta property="og:url" content="{{ new.request.path }}">#}
+{#    <meta property="og:type" content="article">#}
+{#    <meta property="og:title" content="{{ new.title }}"/>#}
+{#    <meta property="og:image" content="{{ new.image.url }}"/>#}
+{#    <meta property="og:description" content="{{ new.description }}"/>#}
+{#    <meta name="description" content="{{ new.description }}">#}
+{#    <meta name="keywords" content="{{ new.title }}">#}
+{#    <meta name="author" content="">#}
+{#{% endblock %}#}
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="inner_news">
+        <div class="uk-container">
+            <div class="novelty uk-grid uk-flex-middle uk-child-width-1-2@m uk-child-width-1-1@s" uk-grid="">
+                <div class="image">
+                    <div class="uk-background-cover uk-background-center-center uk-height-large"
+                         style="background-image: url({{ new.image.url }});"></div>
+                </div>
+                <div class="text"><span>{{ new.created }}</span><br>
+                    <div class="uk-margin-small-bottom"><a class="item" href="">{{ new.type }}</a></div>
+                    <h2 class="about_item uk-margin-medium-bottom">{{ new.title }}</h2>
+                    <p>{{ new.description|safe }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="uk-container">
+            <div class="uk-grid uk-grid-match" uk-grid="">
+                <div class="social uk-width-expand@s">
+                    <div class="soc uk-text-center">
+                        <a class="share uk-icon-button" href="http://vk.com/share.php?url={{ new.request.path }}"
+                           target="_blank">
+                            <div class="fa fa-vk" aria-hidden="true"></div>
+                        </a><br>
+                        <a class="share uk-icon-button"
+                           href="https://www.facebook.com/sharer.php?u={{ new.request.path }}" target="_blank">
+                            <div class="fa fa-facebook" aria-hidden="true"></div>
+                        </a><br>
+                        <a class="share uk-icon-button" href="" target="_blank">
+                            <div class="fa fa-instagram" aria-hidden="true"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="social_text uk-padding-remove uk-width-4-5@s">
+                    <div class="text">
+                        <p>{{ new.description2|safe }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
